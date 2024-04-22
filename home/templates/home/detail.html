@@ -1,0 +1,33 @@
+{% extends 'Base.html' %}
+
+{% block content %}
+    <p><a href="{% url 'account:user_profile' post.user.id %}">{{ post.user.username }} </a>- {{ post.created|date:"Y - M - D"}}</p>
+    <p>{{ post.body }}</p>
+    <p>{{ comments.count }} comment
+
+    {% if request.user.is_authenticated and not is_like %}
+        <a href="{% url 'home:post_like' post.id %}" class='btn btn-outline-success'>Like</a>
+    {% elif request.user.is_authenticated and is_like %}
+        <a href="{% url 'home:post_unlike' post_id %}" class="btn btn-outline-danger">unlike</a>
+    {% endif %}
+
+    {% for com in comments %}
+        <div class="card bg-dark text-white">
+            <p class="card-body">{{ com.user }} : {{ com.created|timesince }}</p>
+            <p class="card-body">{{ com.body }}</p>
+         {% for replay in comments.rcomment.all %}
+            <p class="card-subtitle text-white bg bg-secondary p-3 m-2">{{ replay.user }} <br />
+            {{ replay.body }}</p>
+         {% endfor %}
+
+        </div>
+        {% empty %}
+            <p class="card bg-dark text-white">there is no comment</p>
+    {% endfor %}
+    <br>
+
+    {% if post.user.id == user.id %}
+        <a class="btn btn-outline-danger" href="{% url 'home:post_delete' post.id %}">delete</a>
+        <a class="btn btn-outline-success" href="{% url 'home:post_update' post.id %}">Update</a>
+    {% endif %}
+{% endblock %}

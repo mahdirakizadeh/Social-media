@@ -1,0 +1,28 @@
+{% extends 'Base.html' %}
+
+{% block content %}
+    <h2 class="text-center">{{ user.username }}</h2>
+    <h1>‌</h1>
+
+    <div class="cart">
+        <img src="{{ user.profile.avatar.url}}" alt="" class="card-body">
+    </div>
+
+    <div class="cart">
+        {% for post in posts %}
+            <a class="card-body" href="{{ post.get_absolute_url }}">{{ post.body|truncatewords:7 }}</a>
+        {% endfor %}
+    </div>
+    <h1>‌</h1>
+    {% if request.user.id == user.id %}
+        <a class="btn btn-outline-success" href="{% url 'home:post_create' %}">Create New Post</a>
+        <a href="{% url 'account:edit_user' %}" class="btn badge-info">Edit profile</a>
+    {% endif %}
+
+    {% if request.user.id != user.id and not is_following %}
+        <a class="btn btn-outline-success" href="{% url 'account:user_follow' user.id %}">follow</a>
+    {% elif request.user.id != user.id and is_following %}
+        <a class="btn btn-outline-danger" href="{% url 'account:user_unfollow' user.id %}">unfollow</a>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'Base.html' %}
+
+{% block content %}
+    <h3 class="heading">Posts</h3>
+    {% for po in post %}
+        <a href="{{ po.get_absolute_url }}"><h5>{{ po.body|truncatechars:20 }}</h5></a>
+    {% endfor %}
+
+{% endblock %}
